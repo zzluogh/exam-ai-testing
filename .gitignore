@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+coverage.json
+
+# 密钥（重要！）
+.env
+
+# 实验追踪
+mlflow.db
+mlruns/
+
+# 报告
+allure-results/
+allure-report/
+
+# DVC
+.dvc/tmp/
+
+# 构建
+build/
+dist/
+*.egg-info/

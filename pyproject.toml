@@ -1,0 +1,28 @@
+[project]
+name = "exam-ai-testing"
+version = "0.1.0"
+description = "考试系统多端 AI 辅助测试框架 — Web/客户端/APP/H5 分层测试 + CI/CD + 门禁"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "web: Web 端测试",
+    "api: 接口测试",
+    "regression: 回归测试",
+    "smoke: 冒烟测试",
+    "p0: P0 冒烟级",
+    "p1: P1 核心级",
+    "p2: P2 常规级",
+    "p3: P3 边缘级",
+    "slow: 需要环境的慢测试",
+]
+addopts = "--strict-markers -q"
+
+[tool.coverage.run]
+source = ["src/exam_testing"]
+omit = ["*/tests/*", "*/examples/*"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true
