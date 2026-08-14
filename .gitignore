@@ -8,6 +8,10 @@ coverage.json
 # 密钥（重要！）
 .env
 
+# UI 测试：登录态（含会话 Cookie，绝不能提交）
+tests/ui/storage_state.json
+tests/ui/screenshots/
+
 # 实验追踪
 mlflow.db
 mlruns/
