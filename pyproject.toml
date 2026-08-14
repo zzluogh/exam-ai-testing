@@ -21,6 +21,7 @@ markers = [
     "h5: H5 测试",
     "parallel: 可并行测试",
     "realapi: 需要真实 API key/网络的真实系统测试",
+    "timeout: pytest-timeout 插件标记",
 ]
 addopts = "--strict-markers -q"
 
