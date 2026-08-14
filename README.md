@@ -13,15 +13,23 @@
 
 答案在这个项目里：**AI 负责生成，人负责判断**。每一步都有人的把关点，每一条用例都有来源标注。
 
-## 被测系统（src/exam_testing/business.py）
+## 被测对象
 
-模拟考试系统核心业务，覆盖三大模块：
+### 三层被测对象（真实 + 模拟）
 
-| 模块 | 类 | 核心逻辑 |
-|------|-----|---------|
-| 在线考试 | `ExamSession` | 状态机（started/submitted）、答题、交卷、长度边界 |
-| 自动阅卷 | `ScoringEngine` | 客观题精确匹配、主观题多评仲裁 |
-| 考生报名 | `Registration` | 状态机（PENDING/VERIFIED/ENROLLED/REJECTED）、审核次数上限 |
+| 层级 | 被测对象 | 测试文件 | 结果 |
+|------|---------|---------|------|
+| **真实第三方系统** | 得到大脑 OpenAPI（真实 RAG 检索） | `tests/api/test_ddnd_*.py` | 16 passed |
+| **真实第三方系统** | DeepSeek API（真实 LLM 推理） | `tests/api/test_deepseek.py` | 8 passed |
+| **真实第三方系统** | dummyjson.com（真实 REST CRUD） | `tests/api/test_dummyjson.py` | 13 passed |
+| **业务逻辑（模拟）** | business.py（考试系统核心） | `tests/web/*.py` | 42 passed |
+
+**关键：前三个是真实存在的第三方系统，测试是纯黑盒——不知道内部实现，只能通过 HTTP 接口行为断言。**
+
+真实测试的价值：
+- **独立性**：不能"看着实现写测试"，只能通过行为判断对错
+- **真实行为**：如得到大脑对无效 topic_id 返回 `200 + success=false`（而非 HTTP 4xx）——这种真实行为差异只有测真实系统才能发现
+- **门禁真实**：CI 里无 key 时跳过真实 API 测试，有 key 时全量跑
 
 ## 测试分层（tests/）
 

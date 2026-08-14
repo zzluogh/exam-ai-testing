@@ -1,7 +1,8 @@
 name: Exam AI Testing CI
 on: [push, pull_request]
 jobs:
-  test:
+  # 主 job：无需 API key 的测试（业务逻辑 + dummyjson 黑盒）
+  core:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,9 +12,29 @@ jobs:
       - name: Install deps
         run: |
           pip install pytest pytest-cov pytest-html
-      - name: Run tests with coverage gate
+      - name: Run core tests (skip real-api requiring keys)
         run: |
-          PYTHONPATH=src python3 -m pytest tests/ --cov=src/exam_testing --cov-fail-under=70
+          PYTHONPATH=src python3 -m pytest tests/ -m "not realapi" --cov=src/exam_testing --cov-fail-under=70 --tb=short
       - name: Run P0 smoke gate (must be 100%)
         run: |
           PYTHONPATH=src python3 -m pytest tests/ -m p0 --tb=short
+
+  # 可选 job：需要真实 API key 的真实系统测试（有 key 才跑）
+  realapi:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.DDND_API_KEY != '' && secrets.DEEPSEEK_API_KEY != '' }}
+    env:
+      DDND_API_KEY: ${{ secrets.DDND_API_KEY }}
+      DDND_CLIENT_ID: ${{ secrets.DDND_CLIENT_ID }}
+      DDND_TOPIC_ID: ${{ secrets.DDND_TOPIC_ID }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install deps
+        run: pip install pytest pytest-cov
+      - name: Run real API tests
+        run: |
+          PYTHONPATH=src python3 -m pytest tests/api/ -m realapi --tb=short

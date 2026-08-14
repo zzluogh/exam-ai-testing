@@ -16,8 +16,13 @@ markers = [
     "p2: P2 常规级",
     "p3: P3 边缘级",
     "slow: 需要环境的慢测试",
+    "client: 客户端测试",
+    "app: APP 测试",
+    "h5: H5 测试",
+    "parallel: 可并行测试",
+    "realapi: 需要真实 API key/网络的真实系统测试",
 ]
-addopts = "--strict-markers -q"
+addopts = "--strict-markers -q -n auto"
 
 [tool.coverage.run]
 source = ["src/exam_testing"]
