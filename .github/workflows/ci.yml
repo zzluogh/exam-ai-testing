@@ -11,7 +11,7 @@ jobs:
           python-version: "3.10"
       - name: Install deps
         run: |
-          pip install pytest pytest-cov pytest-html
+          pip install pytest pytest-cov pytest-html requests
       - name: Run core tests (skip real-api requiring keys)
         run: |
           PYTHONPATH=src python3 -m pytest tests/ -m "not realapi" --cov=src/exam_testing --cov-fail-under=70 --tb=short
@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: Install deps
-        run: pip install pytest pytest-cov
+        run: pip install pytest pytest-cov requests
       - name: Run real API tests (skip if no secrets configured)
         run: |
           PYTHONPATH=src python3 -m pytest tests/api/ -m realapi --tb=short
